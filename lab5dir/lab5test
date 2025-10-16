@@ -1,0 +1,33 @@
+"""
+Тесты для функции gen_bin_tree.
+"""
+
+import unittest
+from lab5main import gen_bin_tree
+
+
+class TestGenBinTree(unittest.TestCase):
+    def test_structure(self):
+        tree = gen_bin_tree(3, 12)
+        self.assertIn("value", tree)
+        self.assertIn("left", tree)
+        self.assertIn("right", tree)
+
+    def test_height_one(self):
+        tree = gen_bin_tree(1, 12)
+        self.assertEqual(tree["value"], 12)
+        self.assertIsNone(tree["left"])
+        self.assertIsNone(tree["right"])
+
+    def test_custom_formulas(self):
+        tree = gen_bin_tree(2, 12, lambda x: x ** 3, lambda x: (x * 2) - 1)
+        self.assertEqual(tree["left"]["value"], 12 ** 3)
+        self.assertEqual(tree["right"]["value"], (12 * 2) - 1)
+
+    def test_invalid_height(self):
+        with self.assertRaises(ValueError):
+            gen_bin_tree(0, 12)
+
+
+if __name__ == "__main__":
+    unittest.main()
