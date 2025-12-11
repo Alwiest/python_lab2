@@ -1,6 +1,6 @@
 import requests
 
-class CurenciesList:
+class CurrenciesList:
     def __init__(self, name_curr: str, currency_id: str,
                  name: str = "", value: float = 0.0, previous: float = 0.0):
         self.__id = currency_id
