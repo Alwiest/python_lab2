@@ -1,4 +1,3 @@
-
 from jinja2 import Environment, PackageLoader
 from models import Author
 from controllers.currencycontroller import CurrencyController
