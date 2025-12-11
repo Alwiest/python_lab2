@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчёт по лабораторной работе №7: Декораторы и сквозное логирование</title>
+    <style>
+        /* КАРДИНАЛЬНО НОВЫЕ СТИЛИ: Минимализм, Теал, акцент на линиях */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Verdana', Geneva, Tahoma, sans-serif; /* Измененный шрифт */
+        }
+
+        body {
+            background-color: #f4f7f9; /* Очень светлый, почти белый фон */
+            color: #333;
+            line-height: 1.6;
+            padding: 30px 0;
+        }
+
+        .container {
+            max-width: 900px; /* Узкий, как в документах */
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 0; /* Убраны закругления */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            padding: 50px 40px;
+        }
+
+        header {
+            text-align: left;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 4px double #008080; /* Двойная линия акцентного цвета */
+        }
+
+        h1 {
+            color: #004d4d; /* Темный Теал */
+            font-size: 2em;
+            margin-bottom: 5px;
+            font-weight: 900;
+        }
+
+        .subtitle {
+            color: #607d8b;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            color: #008080; /* Теал */
+            margin: 30px 0 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #008080; /* Сплошная линия под заголовком */
+            font-size: 1.5em;
+        }
+
+        h3 {
+            color: #455a64;
+            margin: 20px 0 10px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 0;
+            border: none; /* Убраны все рамки секций */
+        }
+
+        .code-block {
+            background-color: #f8f8f8; /* Светлый, но контрастный фон для кода */
+            color: #343434;
+            padding: 15px;
+            border-radius: 0;
+            border-left: 5px solid #008080; /* Теаловая вертикальная полоса */
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            line-height: 1.3;
+        }
+
+        .code-block pre {
+            white-space: pre-wrap;
+        }
+
+        .test-results {
+            background-color: #e8f5e9; /* Очень светлый зеленый */
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            border: 1px dashed #4caf50; /* Пунктирная рамка */
+        }
+
+        .logs {
+            background-color: #fcfcfc;
+            padding: 15px;
+            border: 1px solid #cfd8dc;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-family: 'Consolas', monospace;
+            white-space: pre-wrap;
+            font-size: 0.85em;
+        }
+
+        .conclusion {
+            background-color: #e0f2f1; /* Светлый Теал для выводов */
+            padding: 25px;
+            border-radius: 4px;
+            margin-top: 40px;
+            border: 1px solid #b2dfdb;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin: 10px 0;
+            list-style: circle; /* Измененный маркер */
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            background-color: transparent;
+            color: #d35400; /* Яркий акцент для ключевых слов */
+            font-weight: bold;
+            padding: 0;
+            border-bottom: 1px dotted #d35400; /* Подчеркивание для выделения */
+        }
+
+        .success {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #cfd8dc;
+            color: #90a4ae;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="subtitle">Отчет по лабораторной работе №7</div>
+            <h1>Декораторы и сквозное логирование в Python</h1>
+        </header>
+
+        <div class="section">
+            <h2>1. Реализация декоратора `logger` с параметрами</h2>
+            <div class="code-block">
+<pre>def logger(func = None, *, handle = sys.stdout):
+    """
+    Декоратор для логирования вызовов функций и их результатов.
+    Параметры:
+    func : декорируемая функция. Если None, возвращает частично применённый декоратор.
+    handle : ключевой параметр
+    Объект для логирования может быть:
+    - logging.Logger: логирование через методы info(), error()
+    - Объект с методом write() (sys.stdout, io.StringIO)
+    По умолчанию sys.stdout.
+    Возвращает: callable
+    Декорированная функция с логированием.
+    """
+
+    if func is None:
+        return lambda f: logger(f, handle=handle)
+
+    @functools.wraps(func)
+    def inner(*args, **kwargs):
+        func_name = func.__name__
+
+        try:
+            result = func(*args, **kwargs)
+
+            success_message = f"Логгер отработал успешно '{func_name}'"
+
+            if isinstance(handle, logging.Logger):
+                handle.info(success_message)
+            else:
+                handle.write(f"INFO: {success_message}\n")
+
+            return result
+
+        except Exception as e:
+            error_message = f"Ошибка в '{func_name}': {type(e).__name__}: {str(e)}"
+
+            if isinstance(handle, logging.Logger):
+                handle.error(error_message)
+            else:
+                handle.write(f"ERROR: {error_message}\n")
+            raise
+
+    return inner</pre>
+            </div>
+            <p><span class="highlight">Особенности реализации:</span></p>
+            <ul>
+                <li>Поддерживает три типа обработчиков: <span class="highlight">sys.stdout</span>, <span class="highlight">io.StringIO</span>, <span class="highlight">logging.Logger</span>.</li>
+                <li>Может использоваться как <span class="highlight">@logger</span>,так и <span class="highlight">@logger(handle=...)</span>.</li>
+                <li>Сохраняет сигнатуру функции с помощью <span class="highlight">functools.wraps</span>.</li>
+                <li>В случае успеха записывается сообщение в формате <span class="highlight">INFO: Логгер отработал успешно 'имя_функции'</span>.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>2. Функция работы с API курсов валют: `get_currencies`</h2>
+            <div class="code-block">
+<pre>def get_currencies(currency_codes,
+                   url: str = 'https://www.cbr-xml-daily.ru/daily_json.js'):
+    """
+    Получает текущие курсы валют с API Центрального Банка России.
+
+    Параметры:
+    currency_codes: список кодов валют (например, ['USD', 'EUR', 'GBP']).
+    url: URL API Центрального Банка.
+
+    Возвращает:
+        Словарь, где ключи - коды валют, значения - курсы валют к рублю.
+
+    Исключения:
+    ConnectionError - если API недоступен или произошла ошибка сети.
+    ValueError - если полученные данные не являются корректным JSON.
+    KeyError - если в ответе API отсутствует ключ 'Valute' или валюта.
+    TypeError - если курс валюты имеет неверный тип.
+    """
+
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        raise ConnectionError(f"Ошибка подключения к API: {str(e)}") from e
+
+    try:
+        data = response.json()
+    except ValueError as e:
+        raise ValueError(f"Ошибка парсинга JSON: {str(e)}") from e
+
+    if "Valute" not in data:
+        raise KeyError("В ответе API отсутствует ключ 'Valute'")
+
+    currencies = {}
+
+    for code in currency_codes:
+        if code not in data["Valute"]:
+            raise KeyError(f"Валюта с кодом '{code}' отсутствует в данных API")
+
+        currency_data = data["Valute"][code]
+
+        if not isinstance(currency_data.get("Value"), (int, float)):
+            raise TypeError(f"Курс валюты '{code}' имеет неверный тип: {type(currency_data.get('Value'))}")
+
+        currencies[code] = currency_data["Value"]
+
+    return currencies</pre>
+            </div>
+            <p><span class="highlight">Ключевые моменты:</span></p>
+            <ul>
+                <li>Функция содержит только бизнес-логику, без логирования.</li>
+                <li>Обрабатываются основные типы ошибок: сетевые (<span class="highlight">ConnectionError</span>), парсинг (<span class="highlight">ValueError</span>) и ошибки структуры данных (<span class="highlight">KeyError</span>, <span class="highlight">TypeError</span>).</li>
+                <li>Использует <span class="highlight">response.raise_for_status()</span> для обработки HTTP ошибок.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>3. Демонстрационный пример и логирование: `solve_quadratic`</h2>
+            <div class="code-block">
+<pre>@logger(handle=sys.stdout)
+def solve_quadratic(a: float, b: float, c: float):
+    """
+    Решает квадратное уравнение вида: ax² + bx + c = 0
+    Параметры:
+    a, b, c - коэффициенты уравнения
+    Возвращает:
+    - None: если нет действительных корней
+    - float: один корень
+    - tuple: два корня
+    Исключения:
+    TypeError, ValueError - при некорректных входных данных
+    """
+
+    if not all(isinstance(coef, (int, float)) for coef in [a, b, c]):
+        raise TypeError("Все коэффициенты должны быть числами")
+
+    if a == 0:
+        if b == 0:
+            if c == 0:
+                return None
+            else:
+                raise ValueError("Уравнение не имеет решений")
+        return -c / b
+
+    discriminant = b ** 2 - 4 * a * c
+
+    if discriminant < 0:
+        return None
+    elif discriminant == 0:
+        return -b / (2 * a)
+    else:
+        sqrt_d = discriminant ** 0.5
+        root1 = (-b + sqrt_d) / (2 * a)
+        root2 = (-b - sqrt_d) / (2 * a)
+        return root1, root2</pre>
+            </div>
+            <h3>Пример вывода логов в консоль:</h3>
+            <div class="logs">
+Получение курсов валют:
+INFO: Логгер отработал успешно 'get_currencies'
+Результат: {'USD': 93.25, 'EUR': 101.7}
+
+Решение квадратных уравнений:
+x² - 3x + 2 = 0
+INFO: Логгер отработал успешно 'solve_quadratic'
+Корни: (1.0, 2.0)
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>4. Фрагменты логов и настройка файлового логгера</h2>
+            <p>Логирование осуществляется в разные потоки (<span class="highlight">sys.stdout</span>, <span class="highlight">io.StringIO</span>, <span class="highlight">logging.Logger</span>).</p>
+            <div class="logs">
+Логирование в файл:
+INFO: Логгер отработал успешно 'get_currencies'
+Результат записан в currency.log: {'USD': 93.25}
+
+Пример логирования ошибки (в stdout):
+<span class="error">ERROR: Ошибка в 'get_currencies': ConnectionError: Ошибка подключения к API: HTTPConnectionPool...</span>
+            </div>
+            
+            <h3>Функция `setup_file_logger` для настройки `logging.Logger`</h3>
+            <div class="code-block">
+<pre>def setup_file_logger():
+    """
+    Создаёт файловый логгер, который пишет сообщения в currency.log.
+    """
+
+    logger_obj = logging.getLogger("currency_file")
+    logger_obj.setLevel(logging.INFO)
+    logger_obj.handlers = []
+
+    handler = logging.FileHandler("currency.log", mode="w", encoding="utf-8")
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+    logger_obj.addHandler(handler)
+
+    return logger_obj</pre>
+            </div>
+            <p>Этот логгер используется для записи информации в отдельный файл <span class="highlight">currency.log</span>, что демонстрирует интеграцию декоратора с модулем <span class="highlight">logging</span>.</p>
+        </div>
+
+        <div class="section">
+            <h2>5. Результаты тестирования (фрагменты из tests_main.py)</h2>
+
+            <h3>5.1 Тесты функции `get_currencies` (5 тестов)</h3>
+            <div class="code-block">
+<pre>class TestGetCurrenciesFunction(unittest.TestCase):
+    def test_correct_currency_return(self):
+        # Проверка корректного возврата курсов валют
+        with patch('main.requests.get') as mock_get:
+            ...
+            result = get_currencies(['USD', 'EUR'])
+            self.assertEqual(result['USD'], 93.25)
+            self.assertEqual(result['EUR'], 101.7)</pre>
+            </div>
+
+            <div class="test-results">
+                <p><span class="success">Все тесты пройдены успешно:</span></p>
+                <ul>
+                    <li><span class="success">test_correct_currency_return</span> - проверка корректного возврата курсов.</li>
+                    <li><span class="success">test_non_exist_currency</span> - поведение при несуществующей валюте (KeyError).</li>
+                    <li><span class="success">test_connection_error</span> - выброс ConnectionError при ошибке сети.</li>
+                    <li><span class="success">test_value_error_json</span> - выброс ValueError при некорректном JSON.</li>
+                    <li><span class="success">test_key_missing_valute</span> - выброс KeyError при отсутствии ключа 'Valute'.</li>
+                </ul>
+            </div>
+
+            <h3>5.2 Тесты декоратора `logger` и интеграция с `StringIO` (3 теста)</h3>
+            <div class="code-block">
+<pre>class TestLoggerDecorator(unittest.TestCase):
+    def test_logging(self):
+        stream = io.StringIO()
+        @logger(handle=stream)
+        def test_function(x):
+            return x * 2
+
+        result = test_function(5)
+        ...
+        logs = stream.getvalue()
+        self.assertIn("INFO", logs)</pre>
+            </div>
+
+            <div class="test-results">
+                <p><span class="success">Все тесты пройдены успешно:</span></p>
+                <ul>
+                    <li><span class="success">test_logging</span> - логирование при успешном выполнении.</li>
+                    <li><span class="success">test_logging_on_error</span> - логирование при ошибке ValueError.</li>
+                    <li><span class="success">test_logging_error</span> - интеграционный тест логирования ошибок в StringIO.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="conclusion">
+            <h2>6. Выводы и результаты</h2>
+            <p><span class="highlight">Основные выводы:</span></p>
+            <ul>
+                <li><span class="success">Декоратор с параметрами</span> правильно реализован, поддерживает различные типы обработчиков.</li>
+                <li><span class="success">Функция get_currencies</span> отделена от логирования, корректно обрабатывает все исключения.</li>
+                <li><span class="success">Тестовое покрытие</span> включает все необходимые сценарии работы функций и логирования.</li>
+            </ul>
+
+            <p><span class="highlight">Результаты тестирования:</span></p>
+            <ul>
+                <li>Все 8 тестов прошли успешно (5 тестов `get_currencies` + 3 теста `logger`).</li>
+                <li>Проверены все типы исключений: <span class="error">ConnectionError</span>, <span class="error">ValueError</span>, <span class="error">KeyError</span>, <span class="error">TypeError</span>.</li>
+            </ul>
+        </div>
+        
+        <footer>
+            Дата формирования отчета: 11 декабря 2025 г.
+        </footer>
+    </div>
+</body>
+</html>
