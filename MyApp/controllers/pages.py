@@ -9,7 +9,7 @@ class PagesController:
         self.env = env
         self.currency_ctrl = CurrencyController()
         self.user_ctrl = UserController()
-        self.main_author = Author('Сырчин Андрей', 'P3122')
+        self.main_author = Author('Новиков Вячеслав', 'P3122')
 
     def render_index(self):
         """Рендеринг главной страницы"""
