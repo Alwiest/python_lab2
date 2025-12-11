@@ -180,7 +180,7 @@ class PagesController:
 
     def render_report1(self):
         """Рендеринг отчета 1"""
-        template = self.env.get_template("report.html")
+        template = self.env.get_template("report1.html")
         return template.render(
             title='Отчет 1 - Описание проекта',
             author=self.main_author,
