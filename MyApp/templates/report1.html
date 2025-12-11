@@ -1,212 +1,424 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h3>Отчет 1 - Лабораторная работа №8</h3>
+<style>
+    .report-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border-radius: 10px 10px 0 0;
+        padding: 2rem;
+        color: white;
+        text-align: center;
+    }
+
+    .report-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .report-section {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #eaeaea;
+    }
+
+    .section-title {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        padding-left: 0.5rem;
+        border-left: 4px solid #3498db;
+    }
+
+    .model-card {
+        border-radius: 8px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        border: 1px solid #e0e0e0;
+    }
+
+    .model-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .model-card.user {
+        border-top: 4px solid #2ecc71;
+    }
+
+    .model-card.currency {
+        border-top: 4px solid #3498db;
+    }
+
+    .model-card.author {
+        border-top: 4px solid #f39c12;
+    }
+
+    .badge-model {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+    }
+
+    .mvc-diagram {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .mvc-item {
+        background: rgba(255,255,255,0.1);
+        border-radius: 6px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+
+    .code-block {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        border-radius: 6px;
+        padding: 1rem;
+        font-family: 'Consolas', monospace;
+        font-size: 0.9rem;
+        overflow-x: auto;
+    }
+
+    .route-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .route-table tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .feature-list li {
+        margin-bottom: 0.5rem;
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    .feature-list li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #2ecc71;
+        font-weight: bold;
+    }
+
+    .tech-icon {
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8f9fa;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        font-weight: bold;
+    }
+</style>
+
+<div class="report-container">
+    <div class="report-header">
+        <h1 class="display-6 mb-3">Отчет 1 - Лабораторная работа №8</h1>
+        <p class="lead mb-0">Веб-приложение для отслеживания курсов валют с архитектурой MVC</p>
+    </div>
+
+    <div class="report-section">
+        <h3 class="section-title">1. Цель работы</h3>
+        <p class="mb-3">
+            Разработка полнофункционального веб-приложения для мониторинга курсов валют с применением
+            архитектурного паттерна MVC и современных веб-технологий.
+        </p>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Основные задачи</h5>
+                        <ul class="feature-list">
+                            <li>Реализация моделей данных с инкапсуляцией</li>
+                            <li>Создание контроллеров для бизнес-логики</li>
+                            <li>Разработка HTML-шаблонов на Jinja2</li>
+                            <li>Интеграция с API Центрального Банка РФ</li>
+                            <li>Система подписок пользователей</li>
+                            <li>Интерактивная визуализация данных</li>
+                            <li>Комплексное тестирование приложения</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <h4 class="border-bottom pb-2">1. Цель работы</h4>
-                <p>
-                    Целью данной лабораторной работы было создание веб-приложения для отслеживания курсов валют
-                    с использованием архитектуры MVC (Model-View-Controller). Основные задачи:
-                </p>
-                <ul>
-                    <li>Реализация моделей данных (User, Currency, Author) с геттерами и сеттерами</li>
-                    <li>Создание контроллеров для обработки HTTP-запросов</li>
-                    <li>Разработка HTML-шаблонов с использованием Jinja2</li>
-                    <li>Получать данные о курсах валют через функцию get_currencies и отображать их пользователям</li>
-                    <li>Реализация системы подписок пользователей на валюты</li>
-                    <li>Создание интерактивных графиков изменения курсов</li>
-                    <li>Научиться создавать тесты для моделей и серверной логики (подробно описано в отчете 2)</li>
-                </ul>
-
-                <h4 class="border-bottom pb-2 mt-4">2. Описание предметной области</h4>
-                <h5>Модели данных:</h5>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card border-success mb-3">
-                            <div class="card-header bg-success text-white">
-                                <h6>User (Пользователь)</h6>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Свойства:</strong></p>
-                                <ul>
-                                    <li>id - уникальный идентификатор</li>
-                                    <li>name - имя пользователя</li>
-                                    <li>subscriptions - список подписок на валюты</li>
-                                </ul>
-                            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">Используемые технологии</h5>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="tech-icon text-bg-primary">P</span>
+                            <span class="tech-icon text-bg-success">J</span>
+                            <span class="tech-icon text-bg-warning">S</span>
+                            <span class="tech-icon text-bg-info">B</span>
+                            <span class="tech-icon text-bg-dark">S</span>
+                            <span class="tech-icon text-bg-secondary">A</span>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card border-primary mb-3">
-                            <div class="card-header bg-primary text-white">
-                                <h6>Currency (Валюта)</h6>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Свойства:</strong></p>
-                                <ul>
-                                    <li>name_curr - код валюты (USD, EUR и т.д.)</li>
-                                    <li>currency_id - ID валюты в системе ЦБ</li>
-                                    <li>name - полное название</li>
-                                    <li>price - текущий курс</li>
-                                    <li>previous - предыдущий курс</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card border-warning mb-3">
-                            <div class="card-header bg-warning text-dark">
-                                <h6>Author (Автор)</h6>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Свойства:</strong></p>
-                                <ul>
-                                    <li>name - имя автора</li>
-                                    <li>group - учебная группа</li>
-                                </ul>
-                            </div>
+                        <div class="row small">
+                            <div class="col-6">Python</div>
+                            <div class="col-6">Jinja2</div>
+                            <div class="col-6">JavaScript</div>
+                            <div class="col-6">Bootstrap</div>
+                            <div class="col-6">SQLite</div>
+                            <div class="col-6">API ЦБ РФ</div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
-                <h5>Связи между моделями:</h5>
-                <div class="text-center mb-4">
-                    <div class="d-inline-block p-4 border rounded bg-light">
-                        User (1) -- (n) Currency<br>
-                        <small class="text-muted">Один пользователь может быть подписан на несколько валют</small>
+    <div class="report-section">
+        <h3 class="section-title">2. Модели данных</h3>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card model-card user">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title">User</h5>
+                            <span class="badge badge-model bg-success">Сущность</span>
+                        </div>
+                        <p class="text-muted small">Представляет пользователя системы</p>
+                        <ul class="list-unstyled mb-0">
+                            <li><strong>id:</strong> уникальный идентификатор</li>
+                            <li><strong>name:</strong> имя пользователя</li>
+                            <li><strong>subscriptions:</strong> список валют</li>
+                        </ul>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card model-card currency">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title">Currency</h5>
+                            <span class="badge badge-model bg-primary">Сущность</span>
+                        </div>
+                        <p class="text-muted small">Представляет валюту и её курс</p>
+                        <ul class="list-unstyled mb-0">
+                            <li><strong>name_curr:</strong> код валюты</li>
+                            <li><strong>currency_id:</strong> ID в ЦБ</li>
+                            <li><strong>name:</strong> полное название</li>
+                            <li><strong>price:</strong> текущий курс</li>
+                            <li><strong>previous:</strong> предыдущий</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card model-card author">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="card-title">Author</h5>
+                            <span class="badge badge-model bg-warning">Метаданные</span>
+                        </div>
+                        <p class="text-muted small">Информация об авторе проекта</p>
+                        <ul class="list-unstyled mb-0">
+                            <li><strong>name:</strong> имя автора</li>
+                            <li><strong>group:</strong> учебная группа</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                <h4 class="border-bottom pb-2 mt-4">3. Структура проекта</h4>
-                <pre class="bg-dark text-white p-3 rounded">
+        <div class="mt-4">
+            <h6>Связи между моделями:</h6>
+            <div class="mvc-diagram">
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <div class="mvc-item">
+                            <i class="fas fa-user fa-2x mb-2"></i>
+                            <div>User</div>
+                            <small>Пользователь</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <i class="fas fa-exchange-alt fa-2x"></i>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mvc-item">
+                            <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                            <div>Currency</div>
+                            <small>Валюта</small>
+                        </div>
+                    </div>
+                </div>
+                <p class="mb-0 mt-2">Один пользователь может отслеживать несколько валют</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <h3 class="section-title">3. Структура проекта</h3>
+        <pre class="code-block"><code>
 myapp/
-├── models/                    # Модели данных
-│   ├── __init__.py
-│   ├── author.py             # Модель Author
-│   ├── user.py               # Модель User
-│   ├── currency.py           # Модель Currency
-│   └── currency_parser.py    # Парсер API ЦБ
-├── controllers/              # Контроллеры
-│   ├── __init__.py
-│   ├── databasecontroller.py # Работа с БД
-│   ├── currencycontroller.py # Логика валют
-│   ├── usercontroller.py     # Логика пользователей
-│   └── pages.py             # Рендеринг страниц
-├── templates/                # HTML шаблоны
-│   ├── base.html            # Базовый шаблон
-│   ├── index.html           # Главная страница
-│   ├── author.html          # Об авторе
-│   ├── users.html           # Пользователи
-│   ├── user.html            # Конкретный пользователь
-│   ├── currencies.html      # Валюты
-│   ├── report.html          # Отчет 1
-│   └── report2.html         # Отчет 2
-├── myapp.py                 # Главный файл приложения
-└── currencies.db            # База данных SQLite
-                </pre>
+├── models/
+│   ├── author.py
+│   ├── user.py
+│   ├── currency.py
+│   └── currency_parser.py
+├── controllers/
+│   ├── databasecontroller.py
+│   ├── currencycontroller.py
+│   ├── usercontroller.py
+│   └── pages.py
+├── templates/
+│   ├── base.html
+│   ├── index.html
+│   ├── author.html
+│   ├── users.html
+│   ├── user.html
+│   ├── currencies.html
+│   ├── report.html
+│   └── report2.html
+├── myapp.py
+└── currencies.db
+        </code></pre>
+    </div>
 
-                <h4 class="border-bottom pb-2 mt-4">4. Маршруты приложения</h4>
-                <table class="table table-bordered">
-                    <thead class="dark">
-                        <tr>
-                            <th>Маршрут</th>
-                            <th>Описание</th>
-                            <th>Шаблон</th>
-                            <th>Метод</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>/</td>
-                            <td>Главная страница с информацией об авторе и списком валют</td>
-                            <td>index.html</td>
-                            <td>GET</td>
-                        </tr>
-                        <tr>
-                            <td>/author</td>
-                            <td>Информация об авторе</td>
-                            <td>author.html</td>
-                            <td>GET</td>
-                        </tr>
-                        <tr>
-                            <td>/users</td>
-                            <td>Список пользователей</td>
-                            <td>users.html</td>
-                            <td>GET</td>
-                        </tr>
-                        <tr>
-                            <td>/user?id=...</td>
-                            <td>Просмотр одного пользователя</td>
-                            <td>user.html</td>
-                            <td>GET</td>
-                        </tr>
-                        <tr>
-                            <td>/currencies</td>
-                            <td>Список всех валют</td>
-                            <td>currencies.html</td>
-                            <td>GET</td>
-                        </tr>
-                        <tr>
-                            <td>/user/subscription</td>
-                            <td>Управление подписками</td>
-                            <td>-</td>
-                            <td>POST</td>
-                        </tr>
-                        <tr>
-                            <td>/currencies/add</td>
-                            <td>Добавление валюты</td>
-                            <td>-</td>
-                            <td>POST</td>
-                        </tr>
-                        <tr>
-                            <td>/currencies/remove</td>
-                            <td>Удаление валюты</td>
-                            <td>-</td>
-                            <td>POST</td>
-                        </tr>
-                        <tr>
-                            <td>/currencies/update</td>
-                            <td>Обновление курса валюты</td>
-                            <td>-</td>
-                            <td>POST</td>
-                        </tr>
-                        <tr>
-                            <td>/report</td>
-                            <td>Отчет 1</td>
-                            <td>report.html</td>
-                            <td>GET</td>
-                        </tr>
-                        <tr>
-                            <td>/report2</td>
-                            <td>Отчет 2</td>
-                            <td>report2.html</td>
-                            <td>GET</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="report-section">
+        <h3 class="section-title">4. Маршруты приложения</h3>
+        <div class="table-responsive">
+            <table class="table table-hover route-table">
+                <thead>
+                    <tr>
+                        <th>Маршрут</th>
+                        <th>Описание</th>
+                        <th>Шаблон</th>
+                        <th>Метод</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/</code></td>
+                        <td>Главная страница</td>
+                        <td>index.html</td>
+                        <td><span class="badge bg-primary">GET</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/author</code></td>
+                        <td>Информация об авторе</td>
+                        <td>author.html</td>
+                        <td><span class="badge bg-primary">GET</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/users</code></td>
+                        <td>Список пользователей</td>
+                        <td>users.html</td>
+                        <td><span class="badge bg-primary">GET</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/user?id=...</code></td>
+                        <td>Профиль пользователя</td>
+                        <td>user.html</td>
+                        <td><span class="badge bg-primary">GET</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/currencies</code></td>
+                        <td>Курсы валют</td>
+                        <td>currencies.html</td>
+                        <td><span class="badge bg-primary">GET</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/user/subscription</code></td>
+                        <td>Управление подписками</td>
+                        <td>-</td>
+                        <td><span class="badge bg-success">POST</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/report</code></td>
+                        <td>Отчет 1</td>
+                        <td>report.html</td>
+                        <td><span class="badge bg-primary">GET</span></td>
+                    </tr>
+                    <tr>
+                        <td><code>/report2</code></td>
+                        <td>Отчет 2</td>
+                        <td>report2.html</td>
+                        <td><span class="badge bg-primary">GET</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                <h4 class="border-bottom pb-2 mt-4">5. Применение архитектуры MVC - разделение ответственности</h4>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card border-success h-100">
-                            <div class="card-header bg-success text-white">
-                                <h5>Models</h5>
+    <div class="report-section">
+        <h3 class="section-title">5. Архитектура MVC</h3>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="rounded-circle bg-success d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <span class="text-white h4">M</span>
                             </div>
-                            <div class="card-body">
-                                <p><strong>Назначение:</strong></p>
-                                <ul>
-                                    <li>Только свойства сущностей</li>
-                                    <li>Геттеры и сеттеры с валидацией</li>
-                                    <li>Инкапсуляция данных</li>
-                                    <li>Методы преобразования в словари</li>
-                                </ul>
-                                <p><strong>Пример реализации:</strong></p>
-                                <pre><code>@property
+                        </div>
+                        <h5 class="card-title text-center">Model</h5>
+                        <p class="small">Отвечает за данные и бизнес-логику</p>
+                        <ul class="list-unstyled small mb-0">
+                            <li>✓ Инкапсуляция данных</li>
+                            <li>✓ Геттеры/сеттеры</li>
+                            <li>✓ Валидация</li>
+                            <li>✓ Преобразование</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <span class="text-white h4">C</span>
+                            </div>
+                        </div>
+                        <h5 class="card-title text-center">Controller</h5>
+                        <p class="small">Обрабатывает запросы и управляет потоком</p>
+                        <ul class="list-unstyled small mb-0">
+                            <li>✓ Обработка HTTP</li>
+                            <li>✓ Маршрутизация</li>
+                            <li>✓ Бизнес-логика</li>
+                            <li>✓ Подготовка данных</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <div class="rounded-circle bg-warning d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <span class="text-white h4">V</span>
+                            </div>
+                        </div>
+                        <h5 class="card-title text-center">View</h5>
+                        <p class="small">Представление данных пользователю</p>
+                        <ul class="list-unstyled small mb-0">
+                            <li>✓ HTML шаблоны</li>
+                            <li>✓ Наследование</li>
+                            <li>✓ Динамический контент</li>
+                            <li>✓ Интерактивность</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h6>Пример реализации модели:</h6>
+            <div class="code-block">
+@property
 def name(self):
     return self.__name
 
@@ -215,172 +427,148 @@ def name(self, value):
     if len(value) >= 1:
         self.__name = value
     else:
-        raise ValueError('Имя не может быть пустым')</code></pre>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card border-primary h-100">
-                            <div class="card-header bg-primary text-white">
-                                <h5>Controllers</h5>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Назначение:</strong></p>
-                                <ul>
-                                    <li>Обработка HTTP-запросов</li>
-                                    <li>Взаимодействие с моделями</li>
-                                    <li>Подготовка данных для представлений</li>
-                                    <li>Маршрутизация</li>
-                                </ul>
-                                <p><strong>Отдельные модули:</strong></p>
-                                <ul>
-                                    <li>databasecontroller.py - работа с SQLite</li>
-                                    <li>currencycontroller.py - бизнес-логика валют</li>
-                                    <li>pages.py - рендеринг страниц через Jinja2</li>
-                                    <li>usercontroller.py - работа с подписками</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card border-warning h-100">
-                            <div class="card-header bg-warning text-dark">
-                                <h5>Views</h5>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Назначение:</strong></p>
-                                <ul>
-                                    <li>HTML шаблоны с Jinja2</li>
-                                    <li>Наследование шаблонов</li>
-                                    <li>Циклы и условия</li>
-                                    <li>Интерактивные элементы</li>
-                                </ul>
-                                <p><strong>Инициализация Environment:</strong></p>
-                                <pre><code>from jinja2 import Environment,
-     PackageLoader, select_autoescape
+        raise ValueError('Имя не может быть пустым')
+            </div>
+        </div>
+    </div>
 
-env = Environment(
-    loader=PackageLoader("myapp"),
-    autoescape=select_autoescape()
-)</code></pre>
-                            </div>
-                        </div>
-                    </div>
+    <div class="report-section">
+        <h3 class="section-title">6. Интеграция с API ЦБ РФ</h3>
+        <div class="card border-primary">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-primary">Функция get_currencies</h6>
+                <div class="code-block">
+def get_currencies(self, currency_codes: list):
+    try:
+        response = requests.get(self.api_url, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+
+        currencies = {}
+        for code in currency_codes:
+            if code == 'RUB':
+                currency = CurenciesList(
+                    name_curr='RUB',
+                    currency_id='R00001',
+                    name='Российский рубль',
+                    value=1.0,
+                    previous=1.0
+                )
+                currencies['RUB'] = currency
+            elif code in data["Valute"]:
+                currency_info = data["Valute"][code]
+                currency = CurenciesList(
+                    name_curr=code,
+                    currency_id=currency_info["ID"],
+                    name=currency_info["Name"],
+                    value=currency_info["Value"],
+                    previous=currency_info["Previous"]
+                )
+                currencies[code] = currency
+
+        return currencies
+    except Exception as e:
+        return self._create_mock_currency(code)
                 </div>
-
-                <h4 class="border-bottom pb-2 mt-4">6. Интеграция с API ЦБ РФ</h4>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <p><strong>Функция get_currencies для получения курсов:</strong></p>
-                        <pre><code> def get_currencies(self, currency_codes: list):
-        """Получает данные для списка валют"""
-        from .currency import CurenciesList
-
-        try:
-            response = requests.get(self.api_url, timeout=10)
-            response.raise_for_status()
-            data = response.json()
-
-            currencies = {}
-            not_found = []
-
-            if "Valute" in data:
-                for code in currency_codes:
-                    if code == 'RUB':
-                        currency = CurenciesList(
-                            name_curr='RUB',
-                            currency_id='R00001',
-                            name='Российский рубль',
-                            value=1.0,
-                            previous=1.0
-                        )
-                        currencies['RUB'] = currency
-                    elif code in data["Valute"]:
-                        currency_info = data["Valute"][code]
-                        currency = CurenciesList(
-                            name_curr=code,
-                            currency_id=currency_info["ID"],
-                            name=currency_info["Name"],
-                            value=currency_info["Value"],
-                            previous=currency_info["Previous"]
-                        )
-                        currencies[code] = currency
-                    else:
-                        not_found.append(code)
-
-            for code in not_found:
-                print(f"Валюта {code} не найдена в API, создаем фиктивные данные")
-                currency = self._create_mock_currency(code)
-                if currency:
-                    currencies[code] = currency
-
-            self._currencies_data.update(currencies)
-            return currencies
-
-        except Exception as e:
-            print(f"Ошибка при запросе API для курсов: {e}")
-            currencies = {}
-            for code in currency_codes:
-                currency = self._create_mock_currency(code)
-                if currency:
-                    currencies[code] = currency
-            return currencies</code></pre>
-                        <p class="mt-3">
-                            <strong>Особенности интеграции:</strong>
-                        </p>
-                        <ul>
-                            <li>Использование requests для HTTP-запросов</li>
-                            <li>Обработка исключений при ошибках сети</li>
-                            <li>Mocking (подроднее в отчете 2)</li>
-                            <li>Обновление курсов при каждом запросе /currencies или по кнопке</li>
-                        </ul>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="alert alert-info mb-0">
+                            <h6><i class="fas fa-plug"></i> Особенности интеграции</h6>
+                            <ul class="mb-0">
+                                <li>HTTP-запросы через requests</li>
+                                <li>Обработка исключений</li>
+                                <li>Fallback на mock-данные</li>
+                                <li>Автоматическое обновление</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-
-                <h4 class="border-bottom pb-2 mt-4">7. Выводы</h4>
-                <div class="card border-info">
-                    <div class="card-header bg-info text-white">
-                        <h5>Итоги реализации</h5>
-                    </div>
-                    <div class="card-body">
-                        <h6>Возникшие проблемы и их решение:</h6>
-                        <ul>
-                            <li><strong>Проблема:</strong> Неправильная работа с методами длины в шаблонах Jinja2
-                                <br><strong>Решение:</strong> Замена <code>.length</code> на <code>|length</code> и использование <code>len()</code> в Python коде</li>
-                            <li><strong>Проблема:</strong> Ошибки при обработке POST-запросов с пустыми данными
-                                <br><strong>Решение:</strong> Добавление проверок на наличие и корректность параметров</li>
-                            <li><strong>Проблема:</strong> Проблемы с отображением графиков при отсутствии данных
-                                <br><strong>Решение:</strong> Реализация генерации фиктивных данных для отладки</li>
-                        </ul>
-
-                        <h6 class="mt-4">Применение принципов MVC:</h6>
-                        <ul>
-                            <li>Успешно реализовано разделение ответственности между компонентами</li>
-                            <li>Контроллеры обрабатывают запросы и управляют потоком данных</li>
-                            <li>Представления отвечают только за отображение</li>
-                            <li>Реализовано разделение ответственности (MVC)</li>
-                        </ul>
-
-                        <h6 class="mt-4">Полученные знания:</h6>
-                        <ul>
-                            <li>Работа со стандартным HTTPServer и BaseHTTPRequestHandler</li>
-                            <li>Использование Jinja2 для шаблонизации HTML</li>
-                            <li>Интеграция с внешними API (ЦБ РФ)</li>
-                            <li>Создание интерактивных графиков с Plotly.js</li>
-                            <li>Работа с SQLite базой данных</li>
-                            <li>Реализация системы подписок пользователей</li>
-                        </ul>
+                    <div class="col-md-6">
+                        <div class="alert alert-success mb-0">
+                            <h6><i class="fas fa-check-circle"></i> Преимущества</h6>
+                            <ul class="mb-0">
+                                <li>Актуальные данные</li>
+                                <li>Высокая надежность</li>
+                                <li>Легкость поддержки</li>
+                                <li>Гибкость конфигурации</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="card-footer text-center">
-                <a href="/" class="btn btn-primary">
-                    На главную
-                </a>
-                <a href="/report2" class="btn btn-secondary">
-                    К отчету 2
-                </a>
+        </div>
+    </div>
+
+    <div class="report-section">
+        <h3 class="section-title">7. Результаты и выводы</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card border-success mb-3">
+                    <div class="card-body">
+                        <h6 class="text-success">Решенные проблемы</h6>
+                        <div class="mb-2">
+                            <strong>Jinja2 синтаксис:</strong>
+                            <span class="badge bg-success ms-2">Решено</span>
+                            <p class="small mb-0">Замена .length на |length фильтр</p>
+                        </div>
+                        <div class="mb-2">
+                            <strong>POST-запросы:</strong>
+                            <span class="badge bg-success ms-2">Решено</span>
+                            <p class="small mb-0">Добавлена валидация параметров</p>
+                        </div>
+                        <div class="mb-2">
+                            <strong>Данные графиков:</strong>
+                            <span class="badge bg-success ms-2">Решено</span>
+                            <p class="small mb-0">Реализация fallback-данных</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="col-md-6">
+                <div class="card border-primary mb-3">
+                    <div class="card-body">
+                        <h6 class="text-primary">Принципы MVC</h6>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span>Четкое разделение ответственности</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span>Инкапсуляция данных в моделях</span>
+                        </div>
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span>Контроллеры управляют логикой</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <span>Представления отвечают за отображение</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info">
+            <h6><i class="fas fa-graduation-cap"></i> Полученные знания</h6>
+            <div class="row">
+                <div class="col-md-4">✓ HTTP серверы</div>
+                <div class="col-md-4">✓ Шаблонизация Jinja2</div>
+                <div class="col-md-4">✓ Внешние API</div>
+                <div class="col-md-4">✓ Plotly.js графики</div>
+                <div class="col-md-4">✓ SQLite базы данных</div>
+                <div class="col-md-4">✓ Система подписок</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section text-center bg-light">
+        <div class="btn-group" role="group">
+            <a href="/" class="btn btn-outline-primary px-4">
+                <i class="fas fa-home me-2"></i>На главную
+            </a>
+            <a href="/report2" class="btn btn-primary px-4">
+                <i class="fas fa-arrow-right me-2"></i>К отчету 2
+            </a>
         </div>
     </div>
 </div>
