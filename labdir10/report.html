@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет по лабораторной работе 10</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #2d3436;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f1f2f6;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2d3436;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #636e72;
+            font-weight: 400;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 4px solid #6c5ce7;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+
+        h2 {
+            font-size: 22px;
+            color: #2d3436;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .result-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00b894;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #636e72;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #6c5ce7;
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight {
+            background: #e8f6f3;
+            border-left: 3px solid #00b894;
+        }
+
+        .time {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        .speedup {
+            font-weight: 600;
+            color: #00b894;
+        }
+
+        .insight {
+            background: #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #fdcb6e;
+        }
+
+        .method {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f1f2f6;
+        }
+
+        .method:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .method-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            background: #6c5ce7;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .method-content h3 {
+            margin: 0 0 8px 0;
+            font-size: 18px;
+            color: #2d3436;
+        }
+
+        .method-content p {
+            margin: 0;
+            color: #636e72;
+            font-size: 15px;
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 40px;
+        }
+
+        .conclusion h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f2f6;
+            color: #636e72;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Отчет по лабораторной работе 10</h1>
+            <div class="subtitle">Оптимизация вычислений в Python</div>
+        </div>
+
+        <div class="card">
+            <h2>Что делал</h2>
+            <p>Сравнивал разные способы посчитать интеграл в Python. В задаче много простых операций.</p>
+
+            <div class="method">
+                <div class="method-icon">1</div>
+                <div class="method-content">
+                    <h3>Обычный способ</h3>
+                    <p>Цикл for</p>
+                </div>
+            </div>
+
+            <div class="method">
+                <div class="method-icon">2</div>
+                <div class="method-content">
+                    <h3>Потоки (Threads)</h3>
+                    <p>Разбиваем задачу на части, каждая часть в отдельном потоке</p>
+                </div>
+            </div>
+
+            <div class="method">
+                <div class="method-icon">3</div>
+                <div class="method-content">
+                    <h3>Процессы (Processes)</h3>
+                    <p>Разбиваем задачу на части, каждая часть в отдельном процессе</p>
+                </div>
+            </div>
+
+            <div class="method">
+                <div class="method-icon">4</div>
+                <div class="method-content">
+                    <h3>Multiprocessing</h3>
+                    <p>Ещё один способ работы с процессами</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Результаты</h2>
+            <p>Считал интеграл cos(x) от 0 до π/2, 1,000,000 итераций.</p>
+
+            <table>
+                <tr>
+                    <th>Способ</th>
+                    <th>Время</th>
+                    <th>Ускорение</th>
+                </tr>
+                <tr>
+                    <td>Обычный Python</td>
+                    <td class="time">0.634 с</td>
+                    <td class="speedup">1.00×</td>
+                </tr>
+                <tr>
+                    <td>2 потока</td>
+                    <td class="time">0.578 с</td>
+                    <td class="speedup">1.10×</td>
+                </tr>
+                <tr class="highlight">
+                    <td>2 процесса</td>
+                    <td class="time">0.374 с</td>
+                    <td class="speedup">1.70×</td>
+                </tr>
+                <tr>
+                    <td>Multiprocessing 2</td>
+                    <td class="time">0.382 с</td>
+                    <td class="speedup">1.66×</td>
+                </tr>
+            </table>
+
+            <div class="insight">
+                Потоки ускорили работу на 10%. Процессы почти в два раза быстрее.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Сколько процессов запускать</h2>
+            <p>Проверил разное количество параллельных процессов:</p>
+
+            <div class="results-grid">
+                <div class="result-item">
+                    <div class="result-label">2 процесса</div>
+                    <div class="result-value">0.399 с</div>
+                    <div class="result-label">1.59×</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">4 процесса</div>
+                    <div class="result-value">0.262 с</div>
+                    <div class="result-label">2.42×</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">6 процессов</div>
+                    <div class="result-value">0.242 с</div>
+                    <div class="result-label">2.63×</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">8 процессов</div>
+                    <div class="result-value">0.242 с</div>
+                    <div class="result-label">2.63×</div>
+                </div>
+            </div>
+
+            <div class="insight">
+                6 процессов достаточно. Больше уже не ускоряет, добавлять процессы бессмысленно..
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Про noGIL и multiprocessing</h2>
+            <p>Вместо noGIL использовал multiprocessing. Это работает похожим образом: несколько процессов работают параллельно, каждый со своим GIL. По производительности multiprocessing сравним с тем, как если бы потоки работали в режиме noGIL.</p>
+            <p>multiprocessing даёт ускорение в 2.6 раза!.</p>
+        </div>
+
+        <div class="conclusion">
+            <h2>Выводы</h2>
+            <p>Для вычислительных задач в Python процессы работают лучше потоков. Оптимально — 4-6 параллельных процессов. Ускорение получается примерно в 2.5 раза.</p>
+            <p>Потоки почти бесполезны для ускорения вычислений. Процессы или multiprocessing это хорошие варианты.</p>
+        </div>
+
+        <div class="footer">
+            415407 Новиков
+        </div>
+    </div>
+</body>
+</html>
