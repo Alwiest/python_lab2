@@ -1,4 +1,3 @@
-
 from models.currency_parser import CurrencyParser
 from models.currency import CurenciesList
 from controllers.databasecontroller import DatabaseController
